@@ -133,7 +133,7 @@ int main(void)
 		  MH_sensor_voltage=(MH_sensor_val/4096.00f)*3.3;
 		  printf("MH_sensor = %d Voltage=%.2f V\n", MH_sensor_val, MH_sensor_voltage);
 	  }
-	  HAL_Delay(2000);
+	  HAL_Delay(3000);
 	  HAL_GPIO_TogglePin(GPIOA, GreenLed_Pin);
 	  HAL_GPIO_TogglePin(GPIOB,FAN_IN_OUT_Pin);
 	  HAL_GPIO_TogglePin(GPIOB,LED_PANEL_Pin);
