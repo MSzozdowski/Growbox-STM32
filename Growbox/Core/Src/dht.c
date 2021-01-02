@@ -1,4 +1,5 @@
 #include "dht.h"
+
 float concat(uint8_t a, uint8_t b){
     float c;
     c=(float)b;

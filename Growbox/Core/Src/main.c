@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cmsis_os.h"
 #include "adc.h"
 #include "rtc.h"
 #include "tim.h"
@@ -29,6 +30,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
+#include <stdarg.h>
 #include "dht.h"
 #include <stdbool.h>
 /* USER CODE END Includes */
@@ -54,13 +56,22 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void uart_print( const char * format, ... )
+{
+  char buffer[256];
+  va_list args;
+  va_start (args, format);
+  vsnprintf (buffer,256,format, args);
+  perror (buffer);
+  va_end (args);
+}
 /* USER CODE END 0 */
 
 /**
@@ -94,51 +105,22 @@ int main(void)
   MX_TIM1_Init();
   MX_RTC_Init();
   MX_ADC1_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start(&htim1);
-  SENSOR dht11;
-  SENSOR am2301a;
-  uint8_t startTime,stopTime;
-  bool correct;
 
-
-  RTC_TimeTypeDef sTime;
-
-  uint16_t MH_sensor_val;
-  float MH_sensor_voltage;
   /* USER CODE END 2 */
 
+  /* Init scheduler */
+  osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
+  MX_FREERTOS_Init(); 
+  /* Start scheduler */
+  osKernelStart();
+ 
+  /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      startTime=HAL_GetTick();
-	  correct=AM2301A_getData(&am2301a,GPIOA,AM2301A_Pin);
-	  stopTime=HAL_GetTick();
-	  if(correct)
-		  printf("AM2301A: Temperature =%.2f Humidity=%.2f time=%d \n",am2301a.temperature,am2301a.humidity,stopTime-startTime);
-	  startTime=HAL_GetTick();
-	  correct=DHT11_getData(&dht11,GPIOA,DHT11_Pin);
-	  stopTime=HAL_GetTick();
-	  if(correct)
-	  	  printf("DHT11: Temperature =%.2f Humidity=%.2f time=%d \n",dht11.temperature,dht11.humidity,stopTime-startTime);
-
-	  HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
-	  printf("%d:%d:%d \n",sTime.Hours,sTime.Minutes,sTime.Seconds);
-
-	  HAL_ADC_Start(&hadc1);
-	  if (HAL_ADC_PollForConversion(&hadc1,10) == HAL_OK )
-	  {
-		  MH_sensor_val=HAL_ADC_GetValue(&hadc1);
-		  MH_sensor_voltage=(MH_sensor_val/4096.00f)*3.3;
-		  printf("MH_sensor = %d Voltage=%.2f V\n", MH_sensor_val, MH_sensor_voltage);
-	  }
-	  HAL_Delay(3000);
-	  HAL_GPIO_TogglePin(GPIOA, GreenLed_Pin);
-	  HAL_GPIO_TogglePin(GPIOB,FAN_IN_OUT_Pin);
-	  HAL_GPIO_TogglePin(GPIOB,LED_PANEL_Pin);
-	  HAL_GPIO_TogglePin(GPIOB,PUMP_Pin);
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -193,8 +175,28 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
 /* USER CODE END 4 */
+
+ /**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM4 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM4) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.

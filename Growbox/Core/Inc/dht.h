@@ -3,6 +3,7 @@
 #include "usart.h"
 #include "gpio.h"
 #include "stdio.h"
+#include "cmsis_os.h"
 
 typedef struct {
 	float temperature;

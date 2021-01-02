@@ -60,16 +60,20 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define GreenLed_Pin GPIO_PIN_5
 #define GreenLed_GPIO_Port GPIOA
-#define FAN_IN_OUT_Pin GPIO_PIN_10
-#define FAN_IN_OUT_GPIO_Port GPIOB
+#define FAN_OUT_Pin GPIO_PIN_10
+#define FAN_OUT_GPIO_Port GPIOB
 #define AM2301A_Pin GPIO_PIN_8
 #define AM2301A_GPIO_Port GPIOA
+#define FAN_MIX_Pin GPIO_PIN_9
+#define FAN_MIX_GPIO_Port GPIOA
 #define DHT11_Pin GPIO_PIN_10
 #define DHT11_GPIO_Port GPIOA
-#define LED_PANEL_Pin GPIO_PIN_4
-#define LED_PANEL_GPIO_Port GPIOB
-#define PUMP_Pin GPIO_PIN_5
+#define PUMP_Pin GPIO_PIN_3
 #define PUMP_GPIO_Port GPIOB
+#define FAN_IN_Pin GPIO_PIN_4
+#define FAN_IN_GPIO_Port GPIOB
+#define LED_PANEL_Pin GPIO_PIN_5
+#define LED_PANEL_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
