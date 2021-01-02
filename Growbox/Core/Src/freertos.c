@@ -237,7 +237,7 @@ void Start_tempControlTask(void *argument)
 				  turnOffFans();
 				  if (!printMessage) {
 					  printf("Actual time: %d:%d:%d ",sTime.Hours,sTime.Minutes,sTime.Seconds);
-					  printf("Outside sensor: Temperature =%.2f Humidity=%.2f  \n",tempOut,humOut);
+					  printf("Inside sensor: Temperature =%.2f Humidity=%.2f  \n",tempIn,humIn);
 					  printf("Actual time: %d:%d:%d ",sTime.Hours,sTime.Minutes,sTime.Seconds);
 					  printf("Outside sensor: Temperature =%.2f Humidity=%.2f  \n",tempOut,humOut);
 					  printf("Turning off the fans \n");
